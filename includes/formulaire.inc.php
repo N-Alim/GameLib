@@ -3,11 +3,13 @@
 
 if (isset ($_POST['frm'])) 
 {
-    $nom = htmlentities(trim($_POST['nom'])) ?? '';
-    $prenom = htmlentities(trim($_POST['prenom'])) ?? '';
-    $email = htmlentities(trim($_POST['email'])) ?? '';
-    $password = $_POST["password"];
-    $passwordRepeat = $_POST["passwordRepeat"];
+    XSSPreventer::escapeSpecialCharacters();
+    // htmlentities, addslashes, strip_tags, htmlspecialchars font à peu près le même travail
+    $nom = trim($_POST['nom']) ?? '';
+    $prenom = trim($_POST['prenom']) ?? '';
+    $email = trim($_POST['email']) ?? '';
+    $password = trim($_POST["password"]);
+    $passwordRepeat = trim($_POST["passwordRepeat"]);
     
     $erreur = array(); //Tableau vide
 
@@ -29,7 +31,7 @@ if (isset ($_POST['frm']))
         array_push($erreur, "Veuillez saisir des caractères alphabétiques pour votre prénom");
     }
 
-    if (filter_var($email, FILTER_VALIDATE_EMAIL))
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
     {
         array_push($erreur, "Veuillez saisir un e-mail valide");
     }
@@ -41,7 +43,7 @@ if (isset ($_POST['frm']))
 
     if (strlen($passwordRepeat) === 0)
     {
-        array_push($erreur, "Veuillez saisir la vérificatio  de votre mot de passe");
+        array_push($erreur, "Veuillez saisir la vérification de votre mot de passe");
     }
 
     if  ($password !== $passwordRepeat)
@@ -51,7 +53,18 @@ if (isset ($_POST['frm']))
 
     if (count($erreur) === 0)
     {
-        echo "Traitement du formulaire";
+        $serverName = "localhost";
+        $userName = "root";
+        $userPassword = "";
+        $database = "exercice";
+
+        $connHandler = new ConnectionHandler($serverName, $database, $userName, $userPassword);
+
+        $sql = "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
+        VALUES (NULL, '$nom', '$prenom', '$email', '" . password_hash($password, PASSWORD_DEFAULT) . "');";
+
+        $connHandler->insert($sql);
+
     }
 
     else
@@ -69,6 +82,8 @@ if (isset ($_POST['frm']))
         $messageErreur .= "</ul>";
         
         echo $messageErreur;
+
+        echo password_hash($password, PASSWORD_DEFAULT);
     }
 
 }
