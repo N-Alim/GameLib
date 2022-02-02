@@ -4,7 +4,7 @@ class XSSPreventer
 {
     public static function escapeSpecialCharacters()
     {
-        foreach ($_REQUEST as $key => $value) 
+        foreach ($_POST as $key => $value) 
         {
             $value = htmlentities($value);
         } 
