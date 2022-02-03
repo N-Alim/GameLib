@@ -1,56 +1,17 @@
 <?php
 
-<?php
-
-
-if (isset ($_POST['frm'])) 
+if (isset ($_POST['envoi'])) 
 {
     XSSPreventer::escapeSpecialCharacters();
     // htmlentities, addslashes, strip_tags, htmlspecialchars font à peu près le même travail
-    $nom = trim($_POST['nom']) ?? '';
-    $prenom = trim($_POST['prenom']) ?? '';
     $email = trim($_POST['email']) ?? '';
     $password = trim($_POST["password"]);
-    $passwordRepeat = trim($_POST["passwordRepeat"]);
     
     $erreur = array(); //Tableau vide
-
-    if (strlen(trim($nom)) === 0)
-    {
-        array_push($erreur, "Veuillez saisir votre nom");
-    }
-    else if (!ctype_alpha($nom))
-    {
-        array_push($erreur, "Veuillez saisir des caractères alphabétiques pour votre nom");
-    }
-
-    if (strlen(trim($prenom)) === 0)
-    {
-        array_push($erreur, "Veuillez saisir votre prenom");
-    }
-    else if (!ctype_alpha($prenom))
-    {
-        array_push($erreur, "Veuillez saisir des caractères alphabétiques pour votre prénom");
-    }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
     {
         array_push($erreur, "Veuillez saisir un e-mail valide");
-    }
-
-    if (strlen($password) === 0)
-    {
-        array_push($erreur, "Veuillez saisir un mot de passe");
-    }
-
-    if (strlen($passwordRepeat) === 0)
-    {
-        array_push($erreur, "Veuillez saisir la vérification de votre mot de passe");
-    }
-
-    if  ($password !== $passwordRepeat)
-    {
-        array_push($erreur, "Veuillez saisir le même mot de passe");
     }
 
     if (count($erreur) === 0)
@@ -67,32 +28,34 @@ if (isset ($_POST['frm']))
         {
             $conn = new PDO("mysql:host=$serverName;dbname=$database", $userName, $userPassword);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $password = password_hash($password, PASSWORD_DEFAULT);
 
-            $query = $conn->prepare(
-                "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
-                VALUES (:id, :nom, :prenom, :email, :password);"
-            );
+            // $requete = $conn->query("SELECT COUNT(*) FROM utilisateurs WHERE mail='$email'");
 
-            $query->bindValue(':id', null);
-            $query->bindParam(':nom', $nom, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':prenom', $prenom, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':email', $email, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':password', $password, PDO::PARAM_STR_CHAR);
-            $query->execute();
+            // $requete->execute();
+            // $resultat = $requete->fetchColumn();
 
-            $update = $conn->prepare(
-                "UPDATE utilisateurs
-                SET mail='toto@toto.com'
-                WHERE id_utilisateur=1;"
-            );
+            $requete = $conn->query("SELECT * FROM utilisateurs WHERE mail='$email'");
 
-            $update->execute();
+            $requete->execute();
+            $resultat  =$requete->fetchAll(PDO::FETCH_OBJ);
 
-            echo $update->rowCount();
+            if (count($resultat) === 0)
+            {
+                echo "Pas de résultat avec votre login/mot de passe";
+            }
 
+            else
+            {
+                if (password_verify($password, $resultat[0]->mdp))
+                {
+                    echo "Ok";
+                }
 
-            echo "<p>Insertions effectuées</p>";
+                else
+                {
+                    echo "Bien tenté mais non";
+                }
+            }
         }
 
         catch (PDOException $e)
@@ -116,8 +79,6 @@ if (isset ($_POST['frm']))
         $messageErreur .= "</ul>";
         
         echo $messageErreur;
-
-        echo password_hash($password, PASSWORD_DEFAULT);
     }
 
 }
@@ -127,4 +88,4 @@ else
     $nom = $prenom = $email = '';
 }
 
-include 'frmFormulaire.php';
+include 'frmLogin.php';
