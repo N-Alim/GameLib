@@ -58,13 +58,59 @@ if (isset ($_POST['frm']))
         $userPassword = "";
         $database = "exercice";
 
-        $connHandler = new ConnectionHandler($serverName, $database, $userName, $userPassword);
+        // $connHandler = new ConnectionHandler($serverName, $database, $userName, $userPassword);
+        // $connHandler->insert($sql);
 
-        $sql = "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
-        VALUES (NULL, '$nom', '$prenom', '$email', '" . password_hash($password, PASSWORD_DEFAULT) . "');";
+        try 
+        {
+            $conn = new PDO("mysql:host=$serverName;dbname=$database", $userName, $userPassword);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $password = password_hash($password, PASSWORD_DEFAULT);
 
-        $connHandler->insert($sql);
 
+            // 5 méthodes; 4 icis et 1 dans ConnectionHandler
+
+            // $query = $conn->prepare(
+            //     "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
+            //     VALUES (id, :nom, :prenom, :email, :password);"
+            // );
+
+            // $query->execute(
+            //     array(
+            //         ":id" => null,
+            //         ":nom" => $nom,
+            //         ":prenom" => $prenom,
+            //         ":email" => $email,
+            //         ":password" => $password
+            //     )
+            // );
+
+            // $query = $conn->prepare(
+            //     "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
+            //     VALUES (?, ?, ?, ?, ?);"
+            // );
+
+            // $query->execute( array( null, $nom, $prenom, $email, $password ));
+            
+            $query = $conn->prepare(
+                "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
+                VALUES (id, :nom, :prenom, :email, :password);"
+            );
+
+            $query->bindValue(':id', null);
+            $query->bindValue(':nom', $nom, PDO::PARAM_STR_CHAR);
+            $query->bindValue(':prenom', $prenom, PDO::PARAM_STR_CHAR);
+            $query->bindValue(':email', $email, PDO::PARAM_STR_CHAR);
+            $query->bindValue(':password', $password, PDO::PARAM_STR_CHAR);
+            $query->execute();
+
+            echo "<p>Insertions effectuées</p>";
+        }
+
+        catch (PDOException $e)
+        {
+            die("Erreur : " . $e->getMessage());
+        }
     }
 
     else
