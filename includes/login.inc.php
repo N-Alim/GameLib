@@ -1,5 +1,7 @@
 <?php
 
+<?php
+
 
 if (isset ($_POST['frm'])) 
 {
@@ -66,55 +68,6 @@ if (isset ($_POST['frm']))
             $conn = new PDO("mysql:host=$serverName;dbname=$database", $userName, $userPassword);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $password = password_hash($password, PASSWORD_DEFAULT);
-
-
-            // 5 méthodes; 4 icis et 1 dans ConnectionHandler
-
-            // $query = $conn->prepare(
-            //     "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
-            //     VALUES (id, :nom, :prenom, :email, :password);"
-            // );
-
-            // $query->execute(
-            //     array(
-            //         ":id" => null,
-            //         ":nom" => $nom,
-            //         ":prenom" => $prenom,
-            //         ":email" => $email,
-            //         ":password" => $password
-            //     )
-            // );
-
-            // $query = $conn->prepare(
-            //     "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
-            //     VALUES (?, ?, ?, ?, ?);"
-            // );
-
-            // $query->execute( array( null, $nom, $prenom, $email, $password ));
-            
-            // $query = $conn->prepare(
-            //     "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
-            //     VALUES (:id, :nom, :prenom, :email, :password);"
-            // );
-
-            // $query->bindValue(':id', null);
-            // $query->bindValue(':nom', $nom, PDO::PARAM_STR_CHAR);
-            // $query->bindValue(':prenom', $prenom, PDO::PARAM_STR_CHAR);
-            // $query->bindValue(':email', $email, PDO::PARAM_STR_CHAR);
-            // $query->bindValue(':password', $password, PDO::PARAM_STR_CHAR);
-            // $query->execute();
-
-            // $query = $conn->prepare(
-            //     "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
-            //     VALUES (?, ?, ?, ?, ?);"
-            // );
-            // // bindValue: passage par copie, bindParam: passage par référence
-            // $query->bindValue(1, null);
-            // $query->bindValue(2, $nom, PDO::PARAM_STR_CHAR);
-            // $query->bindValue(3, $prenom, PDO::PARAM_STR_CHAR);
-            // $query->bindValue(4, $email, PDO::PARAM_STR_CHAR);
-            // $query->bindValue(5, $password, PDO::PARAM_STR_CHAR);
-            // $query->execute();
 
             $query = $conn->prepare(
                 "INSERT INTO utilisateurs(id_utilisateur, nom, prenom, mail, mdp) 
