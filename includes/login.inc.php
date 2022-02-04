@@ -14,6 +14,11 @@ if (isset ($_POST['envoi']))
         array_push($erreur, "Veuillez saisir un e-mail valide");
     }
 
+    if (strlen($password) === 0)
+    {
+        array_push($erreur, "Veuillez saisir un mot de passe");
+    }
+
     if (count($erreur) === 0)
     {
         $serverName = "localhost";
