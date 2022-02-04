@@ -1,5 +1,5 @@
 <?php
-function getPageFile($defaultPage)
+function goToPage($defaultPage)
 {
     $files = glob("./includes/*.inc.php");
     $page = $_GET["page"] ?? $defaultPage;
@@ -10,5 +10,5 @@ function getPageFile($defaultPage)
         $page = "./includes/" . $defaultPage . ".inc.php";
     }
 
-    return $page; 
+    require_once $page;
 }

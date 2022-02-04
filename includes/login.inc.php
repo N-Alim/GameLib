@@ -53,7 +53,13 @@ if (isset ($_POST['envoi']))
             {
                 if (password_verify($password, $resultat[0]->mdp))
                 {
-                    echo "Ok";
+                    if (!isset($_SESSION["login"]))
+                        $_SESSION["login"] = true;
+                        $_SESSION["nom"] = $resultat[0]->nom;
+                        $_SESSION["prenom"] = $resultat[0]->prenom;
+                        echo "<script>
+                        document.location.replace('http://localhost/GameLib')
+                        </script>";
                 }
 
                 else

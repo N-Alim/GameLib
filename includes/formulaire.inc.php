@@ -136,9 +136,6 @@ if (isset ($_POST['frm']))
 
             $update->execute();
 
-            echo $update->rowCount();
-
-
             echo "<p>Insertions effectuées</p>";
         }
 
