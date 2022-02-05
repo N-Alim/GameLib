@@ -1,2 +1,88 @@
-/* @import url("./reset.css"); */
-@import url("./tableau.css");
+@import url('./reset.css');
+@import url('./formulaire.css');
+@import url('./table.css');
+
+*{
+    --clr-1: hsl(37, 39%, 85%);
+    --clr-2: hsl(0, 0%, 90%);
+
+    --clr-3: hsl(179, 94%, 20%);
+    --clr-4: hsl(196, 92%, 15%);
+
+    --clr-5: hsl(217, 89%, 11%);
+
+    --clr-alert: hsl(0, 52%, 36%);
+
+}
+
+body {
+    background-color: var(--clr-5);
+    color: var(--clr-2);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    /* max-width: 90vw; */
+    margin: 2rem;
+    min-height: 100vh;
+}
+
+h1 {
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+nav {
+    width: 90vw;
+    margin: 2rem auto;
+    margin-bottom: 2rem;
+}
+
+nav ul {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-evenly;
+}
+
+li {
+    padding: 1em 1.5em;
+    flex-grow: 1;
+    text-align: center;
+    background-color: var(--clr-3);
+    border-radius: 0.2em;
+}
+a {
+    text-decoration: none;
+    color: var(--clr-1);
+}
+
+/* li.login {
+    background-color: var(--clr-2);
+}
+li.logout {
+    background-color: var(--clr-alert);
+}
+li.login a {
+    color: var(--clr-5);
+} */
+
+/******* AVATARS ********/
+
+.avatar {
+    max-width: 10%;
+}
+
+/******* FORMULAIRES ********/
+
+/* li.alert {
+    width: 50%;
+    margin: auto;
+    margin-top: 5px;
+    background-color: var(--clr-alert);
+    /* color: rgb(138, 44, 44); */
+} */
+
+/******* FOOTER ********/
+footer {
+    width: 100%;
+    text-align: center;
+    margin: 2em 0;
+}
