@@ -89,7 +89,7 @@ if (isset ($_POST['inscription']))
 
             if (move_uploaded_file($fileTmpName, $fileName))
             {
-                echo "Fichier déplacé";
+                // echo "Fichier déplacé";
             }
         }
 
@@ -107,9 +107,13 @@ if (isset ($_POST['inscription']))
     if (count($erreur) === 0)
     {
         $serverName = "localhost";
-        $userName = "root";
-        $userPassword = "";
+        // $userName = "root";
+        // $userPassword = "";
+        $userName = "guest";
+        $userPassword = "VXUtMaHGFDv5FYz_";
         $database = "gamelib";
+
+        // Mot de passe "guest": VXUtMaHGFDv5FYz_
 
         // $connHandler = new ConnectionHandler($serverName, $database, $userName, $userPassword);
         // $connHandler->insert($sql);
@@ -121,11 +125,10 @@ if (isset ($_POST['inscription']))
             $password = password_hash($password, PASSWORD_DEFAULT);
 
             $query = $conn->prepare(
-                "INSERT INTO users(id_user, name, firstName, email, password, pseudo, bio, avatar) 
-                VALUES (:id, :name, :firstName, :email, :password, :pseudo, :bio, :avatar);"
+                "INSERT INTO users(name, firstName, email, password, pseudo, bio, avatar) 
+                VALUES (:name, :firstName, :email, :password, :pseudo, :bio, :avatar);"
             );
 
-            $query->bindValue(':id', null);
             $query->bindParam(':name', $name, PDO::PARAM_STR_CHAR);
             $query->bindParam(':firstName', $firstName, PDO::PARAM_STR_CHAR);
             $query->bindParam(':email', $email, PDO::PARAM_STR_CHAR);
@@ -136,7 +139,9 @@ if (isset ($_POST['inscription']))
             
             $query->execute();
 
-            echo "<p>Insertions effectuées</p>";
+            echo "<script>
+            document.location.replace('http://localhost/GameLib/index.php?page=login')
+            </script>";
         }
 
         catch (PDOException $e)
@@ -160,8 +165,6 @@ if (isset ($_POST['inscription']))
         $messageErreur .= "</ul>";
         
         echo $messageErreur;
-
-        echo password_hash($password, PASSWORD_DEFAULT);
     }
 
 }
