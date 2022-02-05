@@ -22,9 +22,9 @@ if (isset ($_POST['envoi']))
     if (count($erreur) === 0)
     {
         $serverName = "localhost";
-        $userName = "root";
-        $userPassword = "";
-        $database = "exercice";
+        $userName = "guest";
+        $userPassword = "VXUtMaHGFDv5FYz_";
+        $database = "gamelib";
 
         // $connHandler = new ConnectionHandler($serverName, $database, $userName, $userPassword);
         // $connHandler->insert($sql);
@@ -39,7 +39,7 @@ if (isset ($_POST['envoi']))
             // $requete->execute();
             // $resultat = $requete->fetchColumn();
 
-            $requete = $conn->query("SELECT * FROM utilisateurs WHERE mail='$email'");
+            $requete = $conn->query("SELECT * FROM users WHERE email='$email'");
 
             $requete->execute();
             $resultat  =$requete->fetchAll(PDO::FETCH_OBJ);
@@ -51,12 +51,13 @@ if (isset ($_POST['envoi']))
 
             else
             {
-                if (password_verify($password, $resultat[0]->mdp))
+                if (password_verify($password, $resultat[0]->password))
                 {
                     if (!isset($_SESSION["login"]))
                         $_SESSION["login"] = true;
-                        $_SESSION["nom"] = $resultat[0]->nom;
-                        $_SESSION["prenom"] = $resultat[0]->prenom;
+                        $_SESSION["name"] = $resultat[0]->name;
+                        $_SESSION["firstName"] = $resultat[0]->firstname;
+                        $_SESSION["pseudo"] = $resultat[0]->pseudo;
                         echo "<script>
                         document.location.replace('http://localhost/GameLib')
                         </script>";
