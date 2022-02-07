@@ -14,22 +14,14 @@ if (isset ($_POST['inscription']))
     
     $erreur = array(); //Tableau vide
 
-    if (strlen(trim($name)) === 0)
+    if (!preg_match("/(*UTF8)^[[:alpha:]]+$/", $name))
     {
         array_push($erreur, "Veuillez saisir votre nom");
     }
-    else if (!ctype_alpha($name))
-    {
-        array_push($erreur, "Veuillez saisir des caractères alphabétiques pour votre nom");
-    }
 
-    if (strlen(trim($firstName)) === 0)
+    if (!preg_match("/(*UTF8)^[[:alpha:]]+$/", $firstName))
     {
         array_push($erreur, "Veuillez saisir votre prenom");
-    }
-    else if (!ctype_alpha($firstName))
-    {
-        array_push($erreur, "Veuillez saisir des caractères alphabétiques pour votre prénom");
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))

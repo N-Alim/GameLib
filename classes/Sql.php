@@ -1,6 +1,6 @@
 <?php
 
-class ConnectionHandler
+class Sql
 {
     protected PDO /*object*/ $conn;
 

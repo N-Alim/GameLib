@@ -10,6 +10,7 @@ session_start();
 
 date_default_timezone_set("Europe/Paris");
 // setlocale(LC_ALL, ""); spécifique Windows
+setlocale(LC_CTYPE, 'FR');
 
 spl_autoload_register(function ($className)
 {
