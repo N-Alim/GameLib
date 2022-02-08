@@ -4,7 +4,7 @@ if (isset ($_POST['envoi']))
 {
     XSSPreventer::escapeSpecialCharacters();
     // htmlentities, addslashes, strip_tags, htmlspecialchars font à peu près le même travail
-    $email = trim($_POST['email']) ?? '';
+    $email = mb_strtolower(trim($_POST['email'])) ?? '';
     $password = trim($_POST["password"]);
     
     $erreur = array(); //Tableau vide

@@ -4,9 +4,9 @@ if (isset ($_POST['inscription']))
 {
     XSSPreventer::escapeSpecialCharacters();
     // htmlentities, addslashes, strip_tags, htmlspecialchars font à peu près le même travail
-    $name = trim($_POST['name']) ?? '';
-    $firstName = trim($_POST['firstName']) ?? '';
-    $email = trim($_POST['email']) ?? '';
+    $name = mb_strtoupper(trim($_POST['name'])) ?? '';
+    $firstName = ucfirst(mb_strtolower(trim($_POST['firstName']))) ?? '';
+    $email = mb_strtolower(trim($_POST['email'])) ?? '';
     $password = trim($_POST["password"]);
     $passwordRepeat = trim($_POST["passwordRepeat"]);
     $pseudo = trim($_POST['pseudo']) ?? '';
