@@ -1,8 +1,8 @@
 <form method="post" action="index.php?page=inscription" enctype="multipart/form-data">
     <label for="name"> Nom : </label>
-        <input type="texte" id="name" name="name" value="<?php echo $name;?>" /><br />
+        <input type="texte" id="name" name="name" value="<?php echo html_entity_decode($name);?>" /><br />
     <label for="firstName"> Prénom : </label>
-        <input type="texte" id="firstName" name="firstName" value="<?php echo $firstName;?>" /><br />
+        <input type="texte" id="firstName" name="firstName" value="<?php echo html_entity_decode($firstName);?>" /><br />
     <label for="email"> E-mail : </label>
         <input type="texte" id="email" name="email" value="<?php echo $email;?>" /><br />
     <label for="pseudo"> Pseudo : </label>

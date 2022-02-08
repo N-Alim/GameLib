@@ -2,10 +2,9 @@
 
 if (isset ($_POST['envoi'])) 
 {
-    XSSPreventer::escapeSpecialCharacters();
     // htmlentities, addslashes, strip_tags, htmlspecialchars font à peu près le même travail
-    $email = mb_strtolower(trim($_POST['email'])) ?? '';
-    $password = trim($_POST["password"]);
+    $email = mb_strtolower(trim(htmlentities($_POST['email']))) ?? '';
+    $password = trim(htmlentities($_POST["password"]));
     
     $erreur = array(); //Tableau vide
 
@@ -42,7 +41,7 @@ if (isset ($_POST['envoi']))
             $requete = $conn->query("SELECT * FROM users WHERE email='$email'");
 
             $requete->execute();
-            $resultat  =$requete->fetchAll(PDO::FETCH_OBJ);
+            $resultat = $requete->fetchAll(PDO::FETCH_OBJ);
 
             if (count($resultat) === 0)
             {

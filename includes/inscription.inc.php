@@ -2,26 +2,33 @@
 
 if (isset ($_POST['inscription'])) 
 {
-    XSSPreventer::escapeSpecialCharacters();
     // htmlentities, addslashes, strip_tags, htmlspecialchars font à peu près le même travail
-    $name = mb_strtoupper(trim($_POST['name'])) ?? '';
-    $firstName = ucfirst(mb_strtolower(trim($_POST['firstName']))) ?? '';
-    $email = mb_strtolower(trim($_POST['email'])) ?? '';
-    $password = trim($_POST["password"]);
-    $passwordRepeat = trim($_POST["passwordRepeat"]);
-    $pseudo = trim($_POST['pseudo']) ?? '';
-    $bio = trim($_POST['bio']) ?? '';
+    $name = htmlentities(trim(mb_strtoupper($_POST['name']))) ?? '';
+    $firstName = htmlentities(ucfirst(mb_strtolower(trim($_POST['firstName'])))) ?? '';
+    $email = mb_strtolower(trim(htmlentities($_POST['email']))) ?? '';
+    $password = trim(htmlentities($_POST["password"]));
+    $passwordRepeat = trim(htmlentities($_POST["passwordRepeat"]));
+    $pseudo = trim(htmlentities($_POST['pseudo'])) ?? '';
+    $bio = trim(htmlentities($_POST['bio'])) ?? '';
     
     $erreur = array(); //Tableau vide
 
-    if (!preg_match("/(*UTF8)^[[:alpha:]]+$/", $name))
+    if (!preg_match("/(*UTF8)^[[:alpha:]]+$/", html_entity_decode($name)))
     {
         array_push($erreur, "Veuillez saisir votre nom");
     }
+    else
+    {
+        $name = html_entity_decode($name);
+    }
 
-    if (!preg_match("/(*UTF8)^[[:alpha:]]+$/", $firstName))
+    if (!preg_match("/(*UTF8)^[[:alpha:]]+$/", html_entity_decode($firstName)))
     {
         array_push($erreur, "Veuillez saisir votre prenom");
+    }
+    else
+    {
+        $firstName = html_entity_decode($firstName);
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -61,7 +68,8 @@ if (isset ($_POST['inscription']))
         {
             $date = date("Y-m-d-h-i-s");
             $fileName = $date . "_" . $fileName;
-            $fileName = getcwd() . "\\avatars\\" . $fileName;
+            $fileName = getcwd() . "/avatars/" . $fileName;
+            $fileName = str_replace("\\", "/", $fileName);
 
 
             // if (file_exists($fileName))
@@ -93,7 +101,39 @@ if (isset ($_POST['inscription']))
 
     else
     {
-        array_push($erreur, "Erreur upload " . $_FILES["avatar"]["error"]);
+        $fileError = "";
+        switch ($_FILES["avatar"]["error"])
+        {
+            case 1:
+                $fileError = " La taille du fichier téléchargé excède la valeur de upload_max_filesize, configurée dans le php.ini.";
+                break;
+            
+            case 2:
+                $fileError = "La taille du fichier téléchargé excède la valeur de MAX_FILE_SIZE, qui a été spécifiée dans le formulaire HTML.";
+                break;
+
+            case 3:
+                $fileError = "Le fichier n'a été que partiellement téléchargé.";
+                break;
+
+            case 4:
+                $fileError = "Aucun fichier n'a été téléchargé.";
+                break;
+
+            case 6:
+                $fileError = "Un dossier temporaire est manquant.";
+                break;
+
+            case 7:
+                $fileError = "Échec de l'écriture du fichier sur le disque.";
+                break;
+            
+            case 8:
+                $fileError = "Une extension PHP a arrêté l'envoi de fichier. PHP ne propose aucun moyen de déterminer quelle extension est en cause. L'examen du phpinfo() peut aider.";
+                break;
+
+        }
+        array_push($erreur, $fileError);
     }
 
     if (count($erreur) === 0)
