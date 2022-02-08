@@ -87,10 +87,6 @@ if (isset ($_POST['inscription']))
             //     $fileName = $fileCopyName;
             // }
 
-            if (move_uploaded_file($fileTmpName, $fileName))
-            {
-                // echo "Fichier déplacé";
-            }
         }
 
         else
@@ -156,24 +152,39 @@ if (isset ($_POST['inscription']))
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $password = password_hash($password, PASSWORD_DEFAULT);
 
-            $query = $conn->prepare(
-                "INSERT INTO users(name, firstName, email, password, pseudo, bio, avatar) 
-                VALUES (:name, :firstName, :email, :password, :pseudo, :bio, :avatar);"
-            );
 
-            $query->bindParam(':name', $name, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':firstName', $firstName, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':email', $email, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':password', $password, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':pseudo', $pseudo, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':bio', $bio, PDO::PARAM_STR_CHAR);
-            $query->bindParam(':avatar',  $fileName, PDO::PARAM_STR_CHAR);            
-            
-            $query->execute();
+            $requete = $conn->prepare("SELECT * FROM users WHERE email='$email'");
+            $requete->execute();
+            $resultat = $requete->fetchAll(PDO::FETCH_OBJ);
 
-            echo "<script>
-            document.location.replace('http://localhost/GameLib/index.php?page=login')
-            </script>";
+            if(count($resultat) !== 0) 
+            {
+                echo "<p>Votre adresse est déjà enregistrée dans la base de données</p>";
+            }
+
+            else 
+            {
+                $query = $conn->prepare(
+                    "INSERT INTO users(name, firstName, email, password, pseudo, bio, avatar) 
+                    VALUES (:name, :firstName, :email, :password, :pseudo, :bio, :avatar);"
+                );
+    
+                $query->bindParam(':name', $name, PDO::PARAM_STR_CHAR);
+                $query->bindParam(':firstName', $firstName, PDO::PARAM_STR_CHAR);
+                $query->bindParam(':email', $email, PDO::PARAM_STR_CHAR);
+                $query->bindParam(':password', $password, PDO::PARAM_STR_CHAR);
+                $query->bindParam(':pseudo', $pseudo, PDO::PARAM_STR_CHAR);
+                $query->bindParam(':bio', $bio, PDO::PARAM_STR_CHAR);
+                $query->bindParam(':avatar',  $fileName, PDO::PARAM_STR_CHAR);            
+                
+                $query->execute();
+    
+                echo "<script>
+                document.location.replace('http://localhost/GameLib/index.php?page=login')
+                </script>";
+            }
+
+
         }
 
         catch (PDOException $e)
